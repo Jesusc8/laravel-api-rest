@@ -19,7 +19,7 @@ class CategoryCollection extends ResourceCollection
             return [
                 'id' => $category->id,
                 'type' => 'category',
-                'attribute' => [
+                'attributes' => [
                     'name' => $category->name,
                 ],
             ];
