@@ -14,9 +14,16 @@ class RecipeController extends Controller
 
     }
 
+    public function store(){}
+
     public function show(Recipe $recipe)
     {
         return $recipe->load('category','tags','user');
         
     }
+
+    public function update(){}
+
+    public function destroy(){}
+
 }
