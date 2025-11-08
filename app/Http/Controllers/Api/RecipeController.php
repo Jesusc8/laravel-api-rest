@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\StoreRecipeRequest;
+use App\Http\Requests\UpdateRecipeRequest;
+
 use App\Http\Resources\RecipeResource;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -20,14 +23,26 @@ class RecipeController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(StoreRecipeRequest $request)
     {
+
+        // $request->validate([
+        //     'category_id'   => 'required',
+        //     'user_id'       => 'required',
+        //     'title'         => 'required',
+        //     'description'   => 'required',
+        //     'ingredients'   => 'required',
+        //     'instructions'  => 'required',
+        //     'image'         => 'required',
+
+        // ]);
+
         $recipe = Recipe::create($request->all());
 
-        if ($tags = json_decode($request->tags))
-        {
+        // if ($tags = json_decode($request->tags))
+        // {
             $recipe->tags()->attach($tags);
-        }
+        // }
 
         return response()->json(new RecipeResource($recipe), Response::HTTP_CREATED); //HTTP 201
     }
@@ -35,11 +50,12 @@ class RecipeController extends Controller
     public function show(Recipe $recipe)
     {
         $recipe = $recipe->load('category','tags','user');
+        
         return new RecipeResource($recipe);
         
     }
 
-    public function update(Request $request, Recipe $recipe)
+    public function update(UpdateRecipeRequest $request, Recipe $recipe)
     {
         $recipe->update($request->all());
 
