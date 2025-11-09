@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Recipe;
+use App\Models\User;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreRecipeRequest;
@@ -37,11 +39,11 @@ class RecipeController extends Controller
 
         // ]);
 
-        $recipe = Recipe::create($request->all());
+        $recipe = $request->user()->recipes()->create($request->all());
 
         // if ($tags = json_decode($request->tags))
         // {
-            $recipe->tags()->attach($tags);
+            $recipe->tags()->attach(json_decode($request->tags));
         // }
 
         return response()->json(new RecipeResource($recipe), Response::HTTP_CREATED); //HTTP 201
