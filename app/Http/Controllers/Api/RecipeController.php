@@ -7,6 +7,7 @@ use App\Models\Recipe;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
@@ -21,6 +22,7 @@ class RecipeController extends Controller
     public function index()
     {
         $recipes = Recipe::with('category','tags','user')->get();
+        
         return RecipeResource::collection($recipes);
 
     }
@@ -44,6 +46,8 @@ class RecipeController extends Controller
 
     public function update(UpdateRecipeRequest $request, Recipe $recipe)
     {
+        Gate::authorize('update', $recipe);
+
         $recipe->update($request->all());
 
         if ($tags = json_decode($request->tags))
@@ -56,6 +60,8 @@ class RecipeController extends Controller
 
     public function destroy(Recipe $recipe)
     {
+        Gate::authorize('delete', $recipe);
+
         $recipe->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT); //204
