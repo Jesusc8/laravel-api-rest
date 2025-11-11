@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Api\V1;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-use App\Models\Tag;
+use App\Models\Category;
 use App\Models\User;
 
 use Laravel\Sanctum\Sanctum;
 
 
-class TagTest extends TestCase
+class CategoryTest extends TestCase
 {
 
     use RefreshDatabase;
@@ -22,9 +22,9 @@ class TagTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $categories = Tag::factory(2)->create();
+        $categories = Category::factory(2)->create();
 
-        $response = $this->getJson('/api/tags');
+        $response = $this->getJson('/api/v1/categories');
         $response->assertJsonCount(2,'data')
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -33,10 +33,6 @@ class TagTest extends TestCase
                         'id',
                         'type',
                         'attributes' => ['name'],
-                        'relationships' => [
-                            'recipes' => []
-                        ],
-
                     ]
                 ]
             ]);
@@ -46,18 +42,15 @@ class TagTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->create());
 
-        $tag = Tag::factory()->create();
+        $category = Category::factory()->create();
 
-        $response = $this->getJson('/api/tags/'. $tag->id);
+        $response = $this->getJson('/api/v1/categories/'. $category->id);
         $response->assertStatus(Response::HTTP_OK) //200
             ->assertJsonStructure([
                 'data' => [
                     'id',
                     'type',
                     'attributes' => ['name'],
-                    'relationships' => [
-                        'recipes' => []
-                    ],
                 ]
             ]);
     }
